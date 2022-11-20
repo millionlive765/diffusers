@@ -671,15 +671,15 @@ def main(args):
             scheduler = DDIMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", clip_sample=False, set_alpha_to_one=False)
             pipeline = StableDiffusionPipeline.from_pretrained(
                 args.pretrained_model_name_or_path,
-                unet=accelerator.unwrap_model(unet).to(torch.float16),
-                text_encoder=text_enc_model.to(torch.float16),
+                unet=accelerator.unwrap_model(unet).to(torch.float32),
+                text_encoder=text_enc_model.to(torch.float32),
                 vae=AutoencoderKL.from_pretrained(
                     args.pretrained_vae_name_or_path or args.pretrained_model_name_or_path,
                     subfolder=None if args.pretrained_vae_name_or_path else "vae",
                 ),
                 safety_checker=None,
                 scheduler=scheduler,
-                torch_dtype=torch.float16,
+                torch_dtype=torch.float32,
             )
             save_dir = os.path.join(args.output_dir, f"{step}")
             pipeline.save_pretrained(save_dir)
